@@ -12,7 +12,7 @@ public class {{mod_class}}
     public static final String MODID = "{{mod_id}}";
     public static final Logger LOGGER = LogUtils.getLogger();
 
-    public Mod_Template(FMLJavaModLoadingContext context) {
+    public {{mod_class}}(FMLJavaModLoadingContext context) {
         final var modEventBus = context.getModEventBus();
 
         // Register the commonSetup method for modloading
