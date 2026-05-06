@@ -1,13 +1,11 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "github.jodevnull.mod_template.mixin",
+  "package": "github.jodevnull.{{mod_group}}.mixin",
   "compatibilityLevel": "JAVA_8",
-  "refmap": "mod_template.refmap.json",
-  "mixins": [
-  ],
-  "client": [
-  ],
+  "refmap": "{{mod_id}}.refmap.json",
+  "mixins": [],
+  "client": [],
   "injectors": {
     "defaultRequire": 1
   },
