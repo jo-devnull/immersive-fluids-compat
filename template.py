@@ -1,4 +1,3 @@
-
 from glob import glob
 from pathlib import Path
 from pathlib import PurePath
@@ -28,63 +27,45 @@ def main():
     read_gitignore()
     parse_properties()
 
-    files = []
-    dirs  = []
-
     for file in glob("**/*", recursive=True, root_dir=ROOT):
         if is_ignored(file):
             continue
 
         path = Path(file)
 
-        if should_apply(path):
-            if path.is_file():
-                files.append(path)
-            elif path.is_dir():
-                dirs.apend(path)
+        if path.is_file():
+            apply_file(path)
 
-    apply_files(files)
-    apply_dirs(dirs)
+    apply_path()
 
-def apply_files(files: list[Path]):
-    for path in files:
-        path.write_text(apply_file(path), encoding="utf-8")
-        path.move(apply_path(path))
-
-def apply_dirs(dirs: list[Path]):
-    for path in dirs:
-        path.move(apply_path(path))
-
-def apply_file(path: Path):
-    res = path.read_text(encoding="utf-8")
-
-    for key in TEMPLATE:
-        res = res.replace(keyof(key), TEMPLATE[key])
-
-    return res
-
-def apply_path(path: Path):
-    result = str(path)
+def apply(string):
+    result = string
 
     for k in TEMPLATE:
-        result = result.replace(keyof(k), TEMPLATE[k])
+        result = result.replace("{{" + k + "}}", TEMPLATE[k])
 
-    return Path(result)
+    return result
 
-def should_apply(path: Path):
-    strpath = str(path)
-    contents = path.read_text(encoding="utf-8")
+def apply_file(path: Path):
+    abspath = ROOT.joinpath(path).resolve()
+    contents = abspath.read_text(encoding="utf-8")
+    abspath.write_text(apply(contents), encoding="utf-8")
 
-    for key in TEMPLATE:
-        if keyof(key) in strpath:
-            return True
-        elif keyof(key) in contents:
-            return True
+def apply_path():
+    abs = lambda path: ROOT.joinpath(path).resolve()
 
-    return False
+    mod_id    = TEMPLATE["mod_id"]
+    mod_class = TEMPLATE["mod_class"]
+    mod_group = TEMPLATE["mod_group"]
 
-def keyof(key):
-    return "{{" + key + "}}"
+    Path("src/main/resources/{{mod_id}}.mixins.json").rename(
+        f"src/main/resources/{mod_id}.mixins.json")
+
+    Path("src/main/java/github/jodevnull/{{mod_group}}/{{mod_class}}.java").rename(
+         "src/main/java/github/jodevnull/{{mod_group}}/" + mod_class + ".java")
+
+    Path("src/main/java/github/jodevnull/{{mod_group}}").rename(
+        f"src/main/java/github/jodevnull/{mod_group}")
 
 def is_ignored(path):
     pure = PurePath(path)
