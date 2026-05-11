@@ -108,13 +108,25 @@ dependencies {
         }
 
         var modId = property.key.split("\\.").last()
-        var version = property.value
+        var version = property.value as String
+        var type = "implementation"
 
-        if (property.key.startsWith("modrinth")) {
-            implementation fg.deobf("maven.modrinth:$modId:$version")
-        } else {
-            implementation fg.deobf("curse.maven:$modId-$version")
+        if (version.contains(" @")) {
+            var split = version.split(" @")
+            type = split[1]
+            version = split[0]
         }
+
+        var spec = property.key.startsWith("modrinth") ?
+            "maven.modrinth:$modId:$version" :
+            "curse.maven:$modId-$version"
+
+        if (type == "implementation")
+            implementation fg.deobf(spec)
+        else if (type == "runtimeOnly")
+            runtimeOnly fg.deobf(spec)
+        else if (type == "compileOnly")
+            compileOnly fg.deobf(spec)
     }
 }
 
