@@ -1,0 +1,13 @@
+{
+  "type": "immersive_fluids_compat:pickup_water",
+  "amount": 1,
+  "container": {
+    "item": "minecraft:glass_bottle"
+  },
+  "result": {
+    "item": "minecraft:potion",
+    "nbt": {
+      "Potion": "minecraft:water"
+    }
+  }
+}

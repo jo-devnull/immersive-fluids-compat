@@ -1,0 +1,38 @@
+package github.jodevnull.ifluidscompat.recipe;
+
+import io.github.SirWashington.features.CachedWater;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.player.Player;
+
+public class PickupWaterHandler
+{
+    public static boolean handle(ServerLevel level, Player player, InteractionHand hand, BlockPos pos) {
+        final var input = player.getItemInHand(hand);
+        final var container = new SimpleContainer(input);
+
+        final var recipeOpt =
+            level.getRecipeManager().getRecipeFor(
+                ModRecipeTypes.PICKUP_WATER.get(),
+                container,
+                level
+            );
+
+        if (recipeOpt.isEmpty())
+            return false;
+
+        final var recipe = recipeOpt.get();
+        final var minWaterRequired = recipe.getAmount();
+        final var waterLevel = CachedWater.getWaterLevel(pos);
+
+        if (waterLevel < minWaterRequired)
+            return false;
+
+        CachedWater.setWaterLevel(waterLevel - minWaterRequired, pos);
+        player.setItemInHand(hand, recipe.getOutput());
+
+        return true;
+    }
+}
