@@ -1,0 +1,18 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "github.jodevnull.ifluidscompat.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "immersive_fluids_compat.refmap.json",
+  "mixins": [
+    "FlowSourceAccessor",
+    "MixinOpenEndedPipe"
+  ],
+  "client": [],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "overwrites": {
+    "requireAnnotations": true
+  }
+}
