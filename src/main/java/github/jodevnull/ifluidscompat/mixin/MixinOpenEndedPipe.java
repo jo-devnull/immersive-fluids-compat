@@ -65,8 +65,14 @@ public abstract class MixinOpenEndedPipe
 
     @WrapOperation(method = "provideFluidToSpace", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;I)Z", ordinal = 1))
     public boolean ifc_placeWater(Level instance, BlockPos pos, BlockState state, int p_46603_, Operation<Boolean> original, @Local(name = "fluid") FluidStack fluid) {
-        final int addedLevel = Math.floorDiv(fluid.getAmount() * 8, 1000);
-        CachedWater.addWater(addedLevel, getOutputPos());
-        return true;
+        final int waterLevel = CachedWater.getWaterLevel(pos);
+
+        if (waterLevel > -1) {
+            final int addedLevel = Math.floorDiv(fluid.getAmount() * 8, 1000);
+            CachedWater.addWater(addedLevel, getOutputPos());
+            return true;
+        }
+
+        return false;
     }
 }
