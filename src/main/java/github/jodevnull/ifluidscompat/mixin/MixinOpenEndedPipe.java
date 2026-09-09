@@ -6,6 +6,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.simibubi.create.content.fluids.OpenEndedPipe;
 import com.simibubi.create.foundation.fluid.FluidHelper;
+import github.jodevnull.ifluidscompat.IFluidsCompat;
 import io.github.SirWashington.features.CachedWater;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
@@ -15,6 +16,7 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraftforge.fluids.FluidStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -34,6 +36,14 @@ public abstract class MixinOpenEndedPipe
     @Shadow
     private BlockPos outputPos;
 
+    @Shadow
+    private BlockPos pos;
+
+    @Unique
+    private boolean ifc_isNatural(BlockPos pos) {
+        return IFluidsCompat.isWorldgen(world.getBlockState(pos));
+    }
+
     @ModifyExpressionValue(method = "removeFluidFromSpace", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/material/FluidState;isSource()Z"))
     public boolean ifc_addFlowingWaterCheck(boolean original, @Local(name = "state") BlockState state) {
         if (CachedWater.isWater(state)) {
@@ -44,8 +54,8 @@ public abstract class MixinOpenEndedPipe
     }
 
     @Inject(method = "removeFluidFromSpace", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/material/FluidState;createLegacyBlock()Lnet/minecraft/world/level/block/state/BlockState;"), cancellable = true)
-    public void ifc_removeFlowingWater(boolean simulate, CallbackInfoReturnable<FluidStack> cir, @Local(name = "fluidState") FluidState fluidState, @Local(name = "stack") FluidStack stack) {
-        if (FluidHelper.isWater(stack.getFluid()) && !CachedWater.isInfinite(getOutputPos())) {
+    public void ifc_removeFlowingWater(boolean simulate, CallbackInfoReturnable<FluidStack> cir, @Local(name = "stack") FluidStack stack) {
+        if (FluidHelper.isWater(stack.getFluid()) && !ifc_isNatural(getOutputPos())) {
             final int waterLevel = CachedWater.getWaterLevel(getOutputPos());
 
              if (waterLevel == 8) {
@@ -57,7 +67,7 @@ public abstract class MixinOpenEndedPipe
 
     @ModifyExpressionValue(method = "provideFluidToSpace", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/material/FluidState;isSource()Z"))
     public boolean ifc_isSourceCheck(boolean original, @Local(name = "state") BlockState state) {
-        if (CachedWater.isWater(state) && !CachedWater.isInfinite(getOutputPos()))
+        if (CachedWater.isWater(state) && !ifc_isNatural(getOutputPos()))
             return false;
 
         return original;

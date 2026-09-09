@@ -6,6 +6,10 @@
   "refmap": "immersive_fluids_compat.refmap.json",
   "mixins": [
     "FlowSourceAccessor",
+    "MixinCachedWater",
+    "MixinFlowingFluid",
+    "MixinFlowingWater",
+    "MixinLiquidBlock",
     "MixinOpenEndedPipe"
   ],
   "client": [],
