@@ -26,13 +26,6 @@ public class IFCPlayerEvents
         final var pos = event.getPos().relative(event.getHitVec().getDirection());
         final var blockState = event.getLevel().getBlockState(pos);
 
-        if (player.getMainHandItem().is(Items.STICK)) {
-            player.sendSystemMessage(Component.literal("Level: %d, Natural: %s".formatted(
-                CachedWater.getWaterLevel(pos),
-                Boolean.toString(IFluidsCompat.isWorldgen(blockState))
-            )));
-        }
-
         if (CachedWater.isInfinite(pos) || !CachedWater.isWater(blockState))
             return;
 
