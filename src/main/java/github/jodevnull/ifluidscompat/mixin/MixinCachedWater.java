@@ -36,9 +36,14 @@ public abstract class MixinCachedWater
     @Shadow
     public static Level world;
 
+    @Shadow
+    public static boolean isWater(BlockState state) {
+        throw new UnsupportedOperationException("Implemented via mixin");
+    }
+
     @Unique
     private static boolean ifc$isNaturalSource(BlockPos pos) {
-        return IFluidsCompat.isWorldgen(CachedWater.getBlockState(pos));
+        return IFluidsCompat.isNatural(CachedWater.getBlockState(pos));
     }
 
     /**

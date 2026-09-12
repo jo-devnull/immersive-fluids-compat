@@ -20,7 +20,7 @@ public class IFluidsCompat
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
     public static final BooleanProperty WORLDGEN = BooleanProperty.create("worldgen");
 
-    public static boolean isWorldgen(BlockState state) {
+    public static boolean isNatural(BlockState state) {
         return state.hasProperty(WORLDGEN) && state.getValue(WORLDGEN);
     }
 

@@ -12,7 +12,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.FluidState;
 import net.minecraftforge.fluids.FluidStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -41,7 +40,7 @@ public abstract class MixinOpenEndedPipe
 
     @Unique
     private boolean ifc_isNatural(BlockPos pos) {
-        return IFluidsCompat.isWorldgen(world.getBlockState(pos));
+        return IFluidsCompat.isNatural(world.getBlockState(pos));
     }
 
     @ModifyExpressionValue(method = "removeFluidFromSpace", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/material/FluidState;isSource()Z"))

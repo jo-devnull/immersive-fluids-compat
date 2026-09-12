@@ -31,7 +31,8 @@ public class PickupWaterHandler
             return false;
 
         CachedWater.setWaterLevel(waterLevel - minWaterRequired, pos);
-        player.setItemInHand(hand, recipe.getOutput());
+        player.getItemInHand(hand).shrink(1);
+        player.getInventory().add(recipe.getOutput());
 
         return true;
     }

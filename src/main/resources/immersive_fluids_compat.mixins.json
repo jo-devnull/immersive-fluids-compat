@@ -9,6 +9,7 @@
     "MixinCachedWater",
     "MixinFlowingFluid",
     "MixinFlowingWater",
+    "MixinLevel",
     "MixinLiquidBlock",
     "MixinOpenEndedPipe"
   ],
